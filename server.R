@@ -12,7 +12,7 @@ library(memoise)
       
       withProgress(message="PLEASE WAIT...", detail="reading data", {
       incProgress(0.5, detail="reading data")
-      pldata <- dtm("~/Desktop/data/advice_yj.csv")
+      pldata <- dtm("~/trend_monitor/data/sinkhole.csv")
       incProgress(1, detail="complete")
       
       })
@@ -21,7 +21,8 @@ library(memoise)
         defAttrs <- getDefaultAttrs()
         
         plot(pldata, terms=findFreqTerms(pldata, lowfreq=input$freq)[1:input$words], 
-             corThreshold=input$corThresh, attrs=list(node=list(shape = "box", fixedsize = FALSE, 
-                                            fillcolor="lightblue", fontsize="30")))
+             corThreshold=0.0, attrs=list(node=list(shape = "ellipse", fixedsize = FALSE, 
+                                            fillcolor="lightblue", height="2.6", width="10.5", 
+                                            fontsize="14")))
   })
 })

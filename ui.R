@@ -2,27 +2,75 @@ library(tm)
 library(SnowballC)
 library(Rgraphviz)
 library(stringr)
-library(memoise)
+library(markdown)
 
-
-shinyUI(fluidPage(
-  
-  title = "Cluster Analysis",
-  
-  plotOutput('plot', width="auto", height="550px"),
-  
-  hr(),
-  
-  fluidRow(
-    column(offset=1, width=5, height=1,
-           sliderInput("freq", 
-                       "Minimum Frequency:", 
-                       min = 2,  max = 20, value = 20)),
-    
-    column(offset=1, width=5, height=1,
-           sliderInput("words", 
-                       "Number of Words in Cluster:",
-                       min = 10, max = 50, value = 50))
-    )
-  )
+shinyUI(navbarPage("MassMine",
+                   
+                    tabPanel("Data",
+                             sidebarLayout(
+                                sidebarPanel("Choose File", width=3,
+                                  selectInput("select", label=NULL, choices = list(list.files("~/massmine/data")), 
+                                              selected = head(list, 1)
+                                  ),
+                                actionButton("action", "Update")
+                                ),
+                              
+                            mainPanel(width=7,
+                              includeMarkdown("~/massmine/dashboard/filepage.md")
+                            )
+                      ),
+                    tabPanel("Summary",
+                            dataTableOutput("table")
+                    ),
+                    tabPanel("Frequency",
+                            dataTableOutput("table")
+                    ),
+                    tabPanel("Cluster",
+                            sidebarPanel("Adjust", width=2,                     
+                              
+                              sliderInput("freq", 
+                                          "Minimum Frequency:", 
+                                          min = 2,  max = 20, value = 20),
+                   
+                              sliderInput("words", 
+                                          "# of Words in Cluster",
+                                          min = 10, max = 50, value = 50)
+                            ),
+                            
+                            mainPanel(width=10,
+                            
+                              plotOutput("plot")
+                            )
+                    ),
+                    tabPanel("Export",
+                            dataTableOutput("table")
+                    ),
+                    tabPanel("Help",
+                            
+                            navlistPanel("Help", widths=c(3, 3, 3),
+                              
+                              #List of options/pages for the navigation panel           
+                              tabPanel("Overview",
+                                       h3(width=7,
+                                         includeMarkdown("~/massmine/dashboard/help.md"))     
+                              ),
+                              tabPanel("Data Selection",
+                                       h3("This is the third panel")
+                              ),
+                              tabPanel("Data Summary",
+                                       h3("This is the second panel")
+                              ),
+                              tabPanel("Frequency Analysis",
+                                       h3("This is the third panel")
+                              ),         
+                              tabPanel("Cluster Analysis",
+                                       h3("This is the third panel")
+                              ),
+                              tabPanel("Research Export",
+                                       h3("This is the third panel")
+                              )
+                            )
+                      )
+        )
+)
 )

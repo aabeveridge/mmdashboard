@@ -1,32 +1,20 @@
-##########################################
-# Create Corpus from Tweet texts, clean, #
-# and create a Document Term Matrix      #
-##########################################
-
 library(tm)
 library(SnowballC)
 library(Rgraphviz)
 library(stringr)
-library(memoise)
-
-#################################################################################
-# notes:
-# Create basic data overview function for students, create tables that display
-# the length of time for their data collection, total number of tweets, etc.
-#################################################################################
 
 #Function for creating Document Term Matrix
 dtm <- function(twitfile) {
   
   # Pull in the Twitter data
-  data <- read.csv(twitfile)
+  d <- read.csv(twitfile)
   
   #For use with Twitter data with incomplete string errors
   #data <- read.csv("~/Desktop/twitterdata.csv", quote = "", 
   #                 row.names=NULL, stringsAsFactors = FALSE)
   
   # Create corpus variable from the $text vector
-  corpus1 <- data$text
+  corpus1 <- d$text
   
   # Set all characters to UTF-8
   corpus1 = iconv(corpus1, "", "UTF-8")
@@ -83,34 +71,3 @@ dtm <- function(twitfile) {
   #  }  
   # }
 }
-
-#Plot cluster analysis
-# cluster.graph <- function(x, wordassoc) {
-#   
-#   # Remove sparse terms--the percentage used here           
-#   # changes the rest of the results because making it 100%  
-#   # removes all terms. As the percentage lowers, more terms 
-#   # are included for analysis                               
-#   dtms <- removeSparseTerms(x, 0.90)
-# 
-#   # Summarize the total number of each term remaining
-#   # after removing the sparse terms
-#   freq <- colSums(as.matrix(dtms))
-# 
-#   # Set the low frequecy threshold--this is the total number 
-#   # of times a term repeats throughout the corpus
-#   findFreqTerms(x, lowfreq=2)
-# 
-#   # Set the correlation limit for determining the correlations in the final visual
-#   findAssocs(x, wordassoc, corlimit=0.075)
-#   
-#   # Calls for a list of allowable graph changes in Rgraphviz
-#   defAttrs <- getDefaultAttrs()
-# 
-#   # Plot the correlations
-#   plot(x, terms=findFreqTerms(x, lowfreq=15)[1:40], corThreshold=0.009, 
-#        main=wordassoc, attrs=list(node=list(shape = "box", fixedsize = FALSE, 
-#                                                      fillcolor="lightblue", fontsize="30")
-#                                            ) 
-#        )
-# }

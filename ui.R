@@ -8,13 +8,15 @@ shinyUI(navbarPage("MassMine",
                    
                     tabPanel("Data",
                              sidebarLayout(
-                                sidebarPanel("Choose File", width=3,
-                                  selectInput("select", label=NULL, choices = list(list.files("~/massmine/data")), 
-                                              selected = head(list, 1)
-                                  ),
-                                  actionButton("action", "Update")
-                                ),
-                              
+                                 sidebarPanel(
+                                    fileInput("file1", "Select File for Analysis",
+                                             accept = c(".csv"
+                                             )
+                                    ),
+                                   
+                                    actionButton("action", "Analyze Data")
+                                 ),
+
                                 mainPanel(width=7,
                                   includeMarkdown("~/massmine/dashboard/filepage.md")
                                 )

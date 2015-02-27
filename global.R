@@ -7,14 +7,14 @@ library(stringr)
 dtm <- function(twitfile) {
   
   # Pull in the Twitter data
-  d <- read.csv(twitfile)
+  #d <- read.csv(twitfile, header=TRUE, sep=",")
   
   #For use with Twitter data with incomplete string errors
   #data <- read.csv("~/Desktop/twitterdata.csv", quote = "", 
   #                 row.names=NULL, stringsAsFactors = FALSE)
   
   # Create corpus variable from the $text vector
-  corpus1 <- d$text
+  corpus1 <- twitfile$text
   
   # Set all characters to UTF-8
   corpus1 = iconv(corpus1, "", "UTF-8")

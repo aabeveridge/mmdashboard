@@ -24,7 +24,7 @@ shinyUI(navbarPage("MassMine",
                             dataTableOutput("table")
                     ),
                     tabPanel("Frequency",
-                            dataTableOutput("table")
+                            dataTableOutput("table1")
                     ),
                     tabPanel("Cluster",
                             sidebarPanel("Adjust", width=2,                     
@@ -44,7 +44,7 @@ shinyUI(navbarPage("MassMine",
                             )
                     ),
                     tabPanel("Export",
-                            dataTableOutput("table")
+                            dataTableOutput("table2")
                     ),
                     tabPanel("Help",
                             

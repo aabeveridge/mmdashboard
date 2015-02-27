@@ -14,7 +14,7 @@ shinyServer(function(input, output, session) {
                             
       isolate({
         #Provide progress bar for users while app reads the CSV file
-        withProgress(message="PLEASE WAIT...", detail="reading data", value = 0, {
+        withProgress(message="PLEASE WAIT...", detail="reading data", {
                                 
         #Increment progress artificially so the user "sees" that it is working
         incProgress(0.1, detail="reading data")

@@ -12,13 +12,14 @@ shinyUI(navbarPage("MassMine",
                                   selectInput("select", label=NULL, choices = list(list.files("~/massmine/data")), 
                                               selected = head(list, 1)
                                   ),
-                                actionButton("action", "Update")
+                                  actionButton("action", "Update")
                                 ),
                               
-                            mainPanel(width=7,
-                              includeMarkdown("~/massmine/dashboard/filepage.md")
-                            )
-                      ),
+                                mainPanel(width=7,
+                                  includeMarkdown("~/massmine/dashboard/filepage.md")
+                                )
+                              )
+                    ),
                     tabPanel("Summary",
                             dataTableOutput("table")
                     ),
@@ -72,5 +73,4 @@ shinyUI(navbarPage("MassMine",
                             )
                       )
         )
-)
 )

@@ -28,17 +28,45 @@ shinyUI(navbarPage("MassMine",
                             ),
                             
                             #This is the main output page for the Summary tab
-                            mainPanel(
-                                tableOutput("freqtable") #,
-#                                 tableOutput("hash"),
-#                                 tableOutput("user")
-                            )
+##                             mainPanel(
+##                                 tableOutput("freqtable") #,
+## #                                 tableOutput("hash"),
+## #                                 tableOutput("user")
+##                             )
+                             mainPanel(
+                                 tabsetPanel(
+                                     tabPanel("Word Frequencies",
+                                              tableOutput("freqtable")),
+                                     tabPanel("Hashtags",
+                                              tableOutput("hash")),
+                                     tabPanel("Usernames",
+                                              tableOutput("users"))
+                            ))
                       ),
                       
-                      #This one is for your time series analysis
-#                       tabPanel("Time Series",
-#                               dataTableOutput("")
-#                       ),
+                   ## This one is for your time series analysis
+                   tabPanel("Time Series",
+
+                            wellPanel(
+                                radioButtons("series_radio", 
+                                             label = h3("Select Unit of Time"),
+                                             choices = 
+                                                 list("Hours" = "hours",
+                                                      "Days" = "days",
+                                                      "Weeks" = "weeks",
+                                                      "Months" = "months"),
+                                             selected = "hours"),
+
+                                sliderInput("series.sl",
+                                            "Date Range",
+                                            min = 1, max =
+                                                100, value =
+                                                    c(1, 100))
+
+                                ),
+                            
+                            plotOutput("series")
+                            ),
                       
                       #The cluster analysis
                       tabPanel("Cluster",
@@ -47,9 +75,14 @@ shinyUI(navbarPage("MassMine",
                               #vertically distributed in the same page--this allows
                               #the cluster analysis to fill the full page width below
                               wellPanel(
+                                        ## sliderInput("clust.sl",
+                                        ##             "Number of Words in Cluster",
+                                        ##             min = 10, max = 100, value = 50)
                                         sliderInput("clust.sl",
                                                     "Number of Words in Cluster",
-                                                    min = 10, max = 100, value = 50)
+                                                    min = 160, max =
+                                                        2000, value =
+                                                            c(180, 2000))
                                                 
                                                     ),
                                         plotOutput("clust", width="auto", height="600px")
@@ -61,7 +94,7 @@ shinyUI(navbarPage("MassMine",
                                sidebarPanel(
                                             sliderInput("corr.sl", "Length of List",
                                                         min=10, max=100, value=20),
-                                            textInput("text", "Text:", "text here")),
+                                            textInput("text", "Text:", "4c15")),
                                mainPanel("Word Correlations",
                                tableOutput("corr"))
                       )

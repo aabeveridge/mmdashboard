@@ -109,5 +109,5 @@ process_data <- function(twitfile) {
     ## hashtags  : sorted hashtag frequencies
     ## usernames : sorted @username frequencies
     ## d         : full data for time series (consider replacing)
-    save(list=c("dtm", "hashtags", "usernames", "d"), file="./data/mmdashboard.rda")
+    save(list=c("dtm", "hashtags", "usernames", "d"), file="mmdashboard.rda")
 } ## End of function process_data

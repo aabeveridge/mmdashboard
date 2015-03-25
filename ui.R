@@ -80,9 +80,9 @@ shinyUI(navbarPage("MassMine",
                                         ##             min = 10, max = 100, value = 50)
                                         sliderInput("clust.sl",
                                                     "Number of Words in Cluster",
-                                                    min = 160, max =
+                                                    min = 1, max =
                                                         2000, value =
-                                                            c(180, 2000))
+                                                            c(100, 2000))
                                                 
                                                     ),
                                         plotOutput("clust", width="auto", height="600px")

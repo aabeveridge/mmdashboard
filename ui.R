@@ -9,7 +9,7 @@ shinyUI(navbarPage("MassMine",
                     #Main page
                     tabPanel("Load Data",
                              sidebarPanel(
-                                          fileInput("filerda", "Load File",
+                                          fileInput("filerda", "Browse...",
                                                     multiple=FALSE, accept = c(".rda"
                                                     ))),
                              mainPanel(
@@ -36,10 +36,13 @@ shinyUI(navbarPage("MassMine",
                              mainPanel(
                                  tabsetPanel(
                                      tabPanel("Word Frequencies",
+                                              downloadButton("freq.exp", "Export"),
                                               tableOutput("freqtable")),
                                      tabPanel("Hashtags",
+                                              downloadButton("hash.exp", "Export"),
                                               tableOutput("hash")),
                                      tabPanel("Usernames",
+                                              downloadButton("users.exp", "Export"),
                                               tableOutput("users"))
                             ))
                       ),
@@ -64,7 +67,7 @@ shinyUI(navbarPage("MassMine",
                                                     c(1, 100))
 
                                 ),
-                            
+                            downloadButton("time.exp", "Export"),
                             plotOutput("series")
                             ),
                       
@@ -85,18 +88,20 @@ shinyUI(navbarPage("MassMine",
                                                             c(100, 2000))
                                                 
                                                     ),
+                                        downloadButton("clust.exp", "Export"),
                                         plotOutput("clust", width="auto", height="600px")
                                         ),
                                            
-                      #Second tab for this page. I know what I want to do with
-                      #this page, but I haven't filled it in yet
+                      #Correlation tab for investigating the top correlating words to
+                      #specific words chosen by the user
                       tabPanel("Correlation",
                                sidebarPanel(
                                             sliderInput("corr.sl", "Length of List",
                                                         min=10, max=100, value=20),
                                             textInput("text", "Text:", "4c15")),
                                mainPanel("Word Correlations",
-                               tableOutput("corr"))
+                                         downloadButton("corr.exp", "Export"),
+                                         tableOutput("corr"))
                       )
                     )
 

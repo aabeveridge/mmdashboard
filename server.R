@@ -40,6 +40,32 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  output$freq.exp <- downloadHandler(
+    filename = function() {
+      paste("freq", Sys.Date(), ".csv", sep="")
+    },
+    
+    content = function(file) {
+      ##Loading the file into shiny with the browse function
+      infile <- input$filerda
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      
+      ##The "datapath" is where the input$file1 actually saves
+      ##the loaded file in memory/temp
+      load(infile$datapath)
+      
+      ## This creates the word frequency table on summary page
+      ## Simplified sorting method that also lists words in decreasing
+      ## frequency (NVH: 2015-03-25)
+      freq <- data.frame(Total = sort(colSums(as.matrix(dtm)),
+                                      decreasing=TRUE))
+      
+      write.csv(head(freq, input$freqsl), file)
+    }
+  )
+  
   ## Hashtag frequencies
   output$hash <- renderTable({
       withProgress(message="PLEASE WAIT...", {
@@ -56,6 +82,22 @@ shinyServer(function(input, output, session) {
       })
   }) 
   
+  output$hash.exp <- downloadHandler(
+    filename = function() {
+      paste("hashtags", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      infile <- input$filerda
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      load(infile$datapath)
+      
+      ## Display result
+      write.csv(head(hashtags, input$freqsl), file)
+    }
+    )
+  
   ### @User frequencies
   output$users <- renderTable({
       withProgress(message="PLEASE WAIT...", {
@@ -70,6 +112,23 @@ shinyServer(function(input, output, session) {
           head(usernames, input$freqsl)
       })
   }) 
+  
+  output$users.exp <- downloadHandler(
+    filename = function() {
+      paste("users", Sys.Date(), ".csv", sep="")
+    },
+    
+    content = function(file) {
+      infile <- input$filerda
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      load(infile$datapath)
+      
+      ## Display result
+      write.csv(head(usernames, input$freqsl), file)
+    }
+    )
 
 
   ##This is the output for the Time Series tab in the UI
@@ -81,6 +140,7 @@ shinyServer(function(input, output, session) {
       if (is.null(infile)) {
           return(NULL)
       }
+      
       load(infile$datapath)
 
       breaks = input$series_radio
@@ -126,23 +186,82 @@ shinyServer(function(input, output, session) {
                ylab = "Number of tweets", type="o")
       }
 
-  }) 
+  })
+  
+  output$time.exp <- downloadHandler(
+    filename = function() {
+      paste("timeseries", Sys.Date(), ".pdf", sep="")
+    },
+    
+    content = function(file) {
+      pdf(file, width=12, height=8)
+      infile <- input$filerda
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      
+      load(infile$datapath)
+      
+      breaks = input$series_radio
+      
+      ## Create a column for days (this could be weeks, hours, etc.). This
+      ## gives a time-unit to each tweet
+      ## d$day = cut(d$created, breaks = breaks)
+      
+      mindate = length(d$created) * (input$series.sl[1]/100)
+      maxdate = length(d$created) - (length(d$created) * ((100 - input$series.sl[2]) / 100))
+      
+      ## Subset the data
+      d = d[mindate:maxdate,]
+      
+      d$day = cut(d$created, breaks = breaks)
+      
+      ## Count number of tweets, binned by day
+      tmp = sapply(levels(d$day),
+                   function(x) dim(d[d$day==x, ])[1]) 
+      counts = as.vector(tmp)
+      
+      if (breaks == "hours") {
+        days = hours(names(tmp))
+        xlabel = days[seq(1, length(days), by=12)]
+        
+        ## Plot number of tweets by unit of time
+        plot(1:(length(days)), counts,
+             xlab= paste(toupper(substring(breaks, 1, 1)),
+                         substring(breaks, 2), sep=""),
+             ylab = "Number of tweets", type="o", axes=FALSE)
+        ## Angled axis labels (get this working later perhaps)
+        ## text(seq(1, length(days), by=12), par("usr")[3]-0.25, srt=60, adj=1,
+        ##      xpd=TRUE, labels = xlabel, cex=1) 
+        axis(1, at=seq(1, length(days), by=12), labels = days[seq(1,
+                                                                  length(days), by=12)])
+        axis(2)
+        box()
+      } else {
+        days = as.Date(names(tmp))  # as.Date from zoo library
+        plot(days, counts,
+             xlab= paste(toupper(substring(breaks, 1, 1)),
+                         substring(breaks, 2), sep=""),
+             ylab = "Number of tweets", type="o")
+      }
+      dev.off()
+    }
+    )
   
   ##Create cluster graph for Cluster Analysis tab      
   output$clust <- renderPlot({
-    
-    ##Call a list of attributions to change the look of the cluster graph
-    defAttrs <- getDefaultAttrs()
-    
-    infile <- input$filerda
-    if (is.null(infile)) {
-      return(NULL)
-    }
-    load(infile$datapath)
-    
     ##Provide progress bar while plot is being created
     withProgress(message="PLEASE WAIT...", {
       incProgress(0.3, detail="working")
+      
+      ##Call a list of attributions to change the look of the cluster graph
+      defAttrs <- getDefaultAttrs()
+      
+      infile <- input$filerda
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      load(infile$datapath)
       
       ## Creates cluster analysis using Rgraphviz (NVH:
       ## 2015-03-25. updated to include most popular terms after
@@ -151,11 +270,39 @@ shinyServer(function(input, output, session) {
            corThreshold=0.0, attrs=list(node=list(shape = "ellipse", fixedsize = FALSE, 
                                                   fillcolor="lightblue", height="2.6", width="10.5", 
                                                   fontsize="14")))
+      
       ##Increment progress 100%
       incProgress(1, detail="complete")
-    })
+    })  
   })
-
+  
+  output$clust.exp <- downloadHandler(
+    filename = function() {
+      paste("cluster", Sys.Date(), ".pdf", sep="")
+    },
+    
+    content = function(file) {
+        pdf(file, width=12, height=8)
+        ##Call a list of attributions to change the look of the cluster graph
+        defAttrs <- getDefaultAttrs()
+        
+        infile <- input$filerda
+        if (is.null(infile)) {
+          return(NULL)
+        }
+        load(infile$datapath)
+        
+        ## Creates cluster analysis using Rgraphviz (NVH:
+        ## 2015-03-25. updated to include most popular terms after
+        ## resizing
+        plot(dtm, terms=findFreqTerms(dtm, lowfreq=input$clust.sl[1], highfreq=input$clust.sl[2]),
+             corThreshold=0.0, attrs=list(node=list(shape = "ellipse", fixedsize = FALSE, 
+                                                    fillcolor="lightblue", height="2.6", width="10.5", 
+                                                    fontsize="14")))
+        dev.off()
+    }
+    )
+    
   output$corr <- renderTable({
     withProgress(message="PLEASE WAIT...", {
       incProgress(0.3, detail="working")
@@ -174,4 +321,26 @@ shinyServer(function(input, output, session) {
       head(d, input$corr.sl)
     })
   })
+  
+  output$corr.exp <- downloadHandler(
+    filename = function() {
+      paste("correlation", Sys.Date(), ".csv", sep="")
+    },
+    
+    content = function(file) {
+      ##Loading the file into shiny with the browse function
+      infile <- input$filerda
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      
+      ##The "datapath" is where the input$file1 actually saves
+      ##the loaded file in memory/temp
+      load(infile$datapath)
+      
+      d <- findAssocs(dtm, input$text, corlimit=0.0)
+      
+      write.csv(head(d, input$corr.sl), file)
+    }
+    )
 })

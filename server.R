@@ -267,7 +267,7 @@ shinyServer(function(input, output, session) {
       ## 2015-03-25. updated to include most popular terms after
       ## resizing
       plot(dtm, terms=findFreqTerms(dtm, lowfreq=input$clust.sl[1], highfreq=input$clust.sl[2]),
-           corThreshold=0.0, attrs=list(node=list(shape = "ellipse", fixedsize = FALSE, 
+           corThreshold=0.0, attrs=list(node=list(shape = "ellipse", fixedsize = TRUE, 
                                                   fillcolor="lightblue", height="2.6", width="10.5", 
                                                   fontsize="14")))
       

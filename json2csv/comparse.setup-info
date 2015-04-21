@@ -1,0 +1,3 @@
+((files "comparse.so" "comparse.import.so")
+ (version "0.2.1")
+ (egg-name "comparse"))

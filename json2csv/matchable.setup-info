@@ -1,0 +1,3 @@
+((files "matchable.so" "matchable.import.so")
+ (egg-name "matchable")
+ (version "3.3"))

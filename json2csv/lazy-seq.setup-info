@@ -1,0 +1,3 @@
+((files "lazy-seq.so" "lazy-seq.import.so")
+ (egg-name "lazy-seq")
+ (version "0.0.7"))

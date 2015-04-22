@@ -1,4 +1,0 @@
-((files "args.so" "args.import.so")
- (egg-name "args")
- (version 1.4.4)
- (documentation "args.html"))

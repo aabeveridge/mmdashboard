@@ -1,1 +1,0 @@
-((files "trie.so" "trie.import.so") (egg-name "trie") (version "0.0.1"))

@@ -1,4 +1,0 @@
-((files "srfi-37.so" "srfi-37.import.so")
- (egg-name "srfi-37")
- (version 1.3.1)
- (documentation "srfi-37.html"))

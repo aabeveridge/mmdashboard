@@ -73,7 +73,7 @@ process_data <- function(twitfile, doStemCompletion = TRUE) {
     ## Removes and dummy codes hashtags and usernames
     codes = sapply(1:(length(usrhash)), 
         function (x) paste("c", x, " ", sep=""))
-    corpus1 <- mgsub(usrhash, subs, corpus1)
+    corpus1 <- multigsub(usrhash, subs, corpus1)
 
     ## Remove other words
     ## other.words <- c("rt", "na", "s", "2015", "2014", "er", "em", "http")

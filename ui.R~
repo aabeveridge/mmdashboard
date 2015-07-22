@@ -6,6 +6,9 @@ library(markdown)
 
 shinyUI(navbarPage("MassMine",
                    
+                    #Fullscreen mode for app
+                    tags$head(tags$script(src="full.js")),                    
+                    
                     #Main page
                     tabPanel("Load Data",
                              sidebarPanel(
